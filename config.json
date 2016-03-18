@@ -1,0 +1,46 @@
+[
+    {
+        "name": "Index",
+        "route": "/",
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "response": {
+            "status": 200,
+            "type": "file",
+            "content": "test.json"
+        }
+    }, 
+    {
+        "name": "Hello",
+        "route": "/v1/hello",
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "response": {
+            "status": 200,
+            "type": "raw",
+            "content": "Hello World"
+        },
+        "auth": {
+            "type": "basic",
+            "username": "",
+            "password": ""
+        }
+    }, 
+    {
+        "name": "Redirect",
+        "route": "/v1/world",
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "response": {
+            "status": 301,
+            "type": "redirect",
+            "content": "/v1/hello"
+        }
+    }
+]

@@ -2,39 +2,32 @@ package main
 
 import "fmt"
 
-type responseType string
-
-var (
-	file     responseType = "file"
-	redirect              = "redirect"
-	raw                   = "raw"
-)
-
-type Header struct {
-	ContentType string `json:"Content-Type"`
-}
-
+// Response is used to build the response body
 type Response struct {
-	Status  int          `json:"status"`
-	Type    responseType `json:"type"`
-	Content string       `json:"content"`
+	Status int `json:"status"`
+	// Body is converted to a url.URL to extract the scheme
+	// The valid protocols are file: and http:
+	// if none of these protocols are found, then the response body will be the raw string
+	Body string `json:"body"`
 }
 
-type Auth struct {
-	Type     string `json:"type"`
+// BasicAuth is used to configure a http basic auth on the endpoint
+type BasicAuth struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
+// Route is used to configure the route
 type Route struct {
-	Name     string   `json:"name"`
-	Route    string   `json:"route"`
-	Method   string   `json:"method"`
-	Headers  []Header `json:"headers,omitempty"`
-	Response Response `json:"response"`
-	Auth     Auth     `json:"auth,omitempty"`
+	Name     string            `json:"name"`
+	Route    string            `json:"route"`
+	Methods  []string          `json:"methods"`
+	Headers  map[string]string `json:"headers,omitempty"`
+	Response Response          `json:"response"`
+	Auth     BasicAuth         `json:"auth,omitempty"`
 }
 
+// Routes is a list of configured routes
 type Routes []Route
 
 func main() {

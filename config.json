@@ -2,7 +2,7 @@
     {
         "name": "Index",
         "route": "/",
-        "method": "GET",
+        "methods": ["GET", "POST"],
         "headers": {
             "Content-Type": "application/json"
         },
@@ -14,7 +14,7 @@
     {
         "name": "Hello",
         "route": "/v1/hello",
-        "method": "GET",
+        "method": ["GET"],
         "headers": {
             "Content-Type": "application/json"
         },
@@ -23,7 +23,6 @@
             "body": "Hello World"
         },
         "auth": {
-            "type": "basic",
             "username": "",
             "password": ""
         }

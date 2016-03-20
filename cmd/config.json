@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Index",
+        "path": "/",
+        "methods": ["GET", "POST"],
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "status": 200,
+        "type": "file",
+        "body": "config.json"
+    }, 
+    {
+        "name": "Hello",
+        "path": "/v1/hello",
+        "methods": ["GET"],
+        "headers": {
+            "Content-Type": "text/html"
+        },
+        "status": 200,
+        "type": "raw",
+        "body": "Hello World"
+    }
+]

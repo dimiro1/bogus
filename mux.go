@@ -2,39 +2,32 @@ package bogus
 
 import (
 	"fmt"
-	"log"
+	"html/template"
 	"net/http"
-	"os"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
+// Mux is struct that knows how to build handlers
 type Mux struct {
 	mux *mux.Router
 }
 
+// NewMux returns a new Mux
 func NewMux() *Mux {
 	return &Mux{
 		mux: mux.NewRouter(),
 	}
 }
 
-func (m *Mux) AddRoute(route *Route) *Mux {
+// AddRoute adds a new Route
+func (m *Mux) AddRoute(route Route) *Mux {
 	m.mux.
 		NewRoute().
-		Methods(route.methods...).
-		Name(route.name).
-		Path(route.path).
-		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			for key, value := range route.headers {
-				w.Header().Add(key, value)
-			}
-
-			w.WriteHeader(route.status)
-
-			fmt.Fprint(w, route.body)
-		})
+		Methods(route.Methods...).
+		Name(route.Name).
+		Path(route.Path).
+		HandlerFunc(routeHandler(route))
 
 	return m
 }
@@ -43,20 +36,38 @@ func (m *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m.mux.ServeHTTP(w, r)
 }
 
-func (m *Mux) Serve(addr string) {
-	fmt.Printf("Starting Bogus on addr %s\n", addr)
-	fmt.Println(`
-######                              
-#     #  ####   ####  #    #  ####  
-#     # #    # #    # #    # #      
-######  #    # #      #    #  ####  
-#     # #    # #  ### #    #      # 
-#     # #    # #    # #    # #    # 
-######   ####   ####   ####   ####  
-`)
-	fmt.Println("By: Claudemiro Alves Feitosa Neto <dimiro1@gmail.com>")
-	fmt.Println("Waiting for requests...")
+func routeHandler(route Route) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
 
-	log.Fatal(http.ListenAndServe(addr,
-		handlers.LoggingHandler(os.Stdout, m)))
+		for key, value := range route.Headers {
+			w.Header().Add(key, value)
+		}
+
+		w.WriteHeader(route.Status)
+
+		t, err := template.New(route.Name).Parse(route.Body)
+
+		// Error, rendering the raw response
+		if err != nil {
+			fmt.Fprint(w, route.Body)
+			return
+		}
+
+		t.Execute(w, struct {
+			Name    string
+			Path    string
+			Methods []string
+			Headers map[string]string
+			Params  map[string]string
+			Status  int
+		}{
+			route.Name,
+			route.Path,
+			route.Methods,
+			route.Headers,
+			params,
+			route.Status,
+		})
+	}
 }

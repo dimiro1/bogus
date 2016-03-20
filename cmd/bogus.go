@@ -2,12 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/dimiro1/bogus"
+	"github.com/gorilla/handlers"
 )
 
 type route struct {
@@ -37,12 +39,13 @@ func main() {
 	mux := bogus.NewMux()
 
 	for _, r := range routes {
-		route := bogus.NewRoute().
-			Name(r.Name).
-			Path(r.Path).
-			Methods(r.Methods).
-			Headers(r.Headers).
-			Status(r.Status)
+		route := bogus.Route{
+			Name:    r.Name,
+			Path:    r.Path,
+			Methods: r.Methods,
+			Headers: r.Headers,
+			Status:  r.Status,
+		}
 
 		var content []byte
 
@@ -56,9 +59,27 @@ func main() {
 		default:
 			content = []byte(r.Body)
 		}
-		route.Body(string(content))
+
+		route.Body = string(content)
+
 		mux.AddRoute(route)
 	}
 
-	mux.Serve(":8080")
+	addr := ":8080"
+
+	fmt.Printf("Starting Bogus on addr %s\n", addr)
+	fmt.Println(`
+######                              
+#     #  ####   ####  #    #  ####  
+#     # #    # #    # #    # #      
+######  #    # #      #    #  ####  
+#     # #    # #  ### #    #      # 
+#     # #    # #    # #    # #    # 
+######   ####   ####   ####   ####  
+`)
+	fmt.Println("By: Claudemiro Alves Feitosa Neto <dimiro1@gmail.com>")
+	fmt.Println("Waiting for requests...")
+
+	log.Fatal(http.ListenAndServe(":8080",
+		handlers.LoggingHandler(os.Stdout, mux)))
 }

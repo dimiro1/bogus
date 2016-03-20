@@ -2,15 +2,6 @@ package main
 
 import "fmt"
 
-// Response is used to build the response body
-type Response struct {
-	Status int `json:"status"`
-	// Body is converted to a url.URL to extract the scheme
-	// The valid protocols are file: and http:
-	// if none of these protocols are found, then the response body will be the raw string
-	Body string `json:"body"`
-}
-
 // BasicAuth is used to configure a http basic auth on the endpoint
 type BasicAuth struct {
 	Username string `json:"username"`
@@ -19,12 +10,18 @@ type BasicAuth struct {
 
 // Route is used to configure the route
 type Route struct {
-	Name     string            `json:"name"`
-	Route    string            `json:"route"`
-	Methods  []string          `json:"methods"`
-	Headers  map[string]string `json:"headers,omitempty"`
-	Response Response          `json:"response"`
-	Auth     BasicAuth         `json:"auth,omitempty"`
+	Name    string            `json:"name"`
+	Route   string            `json:"route"`
+	Methods []string          `json:"methods"`
+	Headers map[string]string `json:"headers,omitempty"`
+
+	// Body is converted to a url.URL to extract the scheme
+	// The valid protocols are file: and http:
+	// if none of these protocols are found, then the response body will be the raw string
+	Body   string `json:"body"`
+	Status int    `json:"status"`
+
+	Auth BasicAuth `json:"auth,omitempty"`
 }
 
 // Routes is a list of configured routes

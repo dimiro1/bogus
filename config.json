@@ -6,10 +6,8 @@
         "headers": {
             "Content-Type": "application/json"
         },
-        "response": {
-            "status": 200,
-            "body": "file://test.json"
-        }
+        "status": 200,
+        "body": "file://test.json"
     }, 
     {
         "name": "Hello",
@@ -18,10 +16,8 @@
         "headers": {
             "Content-Type": "application/json"
         },
-        "response": {
-            "status": 200,
-            "body": "Hello World"
-        },
+        "status": 200,
+        "body": "Hello World",
         "auth": {
             "username": "",
             "password": ""

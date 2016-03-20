@@ -45,6 +45,18 @@ func (m *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (m *Mux) Serve(addr string) {
 	fmt.Printf("Starting Bogus on addr %s\n", addr)
+	fmt.Println(`
+######                              
+#     #  ####   ####  #    #  ####  
+#     # #    # #    # #    # #      
+######  #    # #      #    #  ####  
+#     # #    # #  ### #    #      # 
+#     # #    # #    # #    # #    # 
+######   ####   ####   ####   ####  
+`)
+	fmt.Println("By: Claudemiro Alves Feitosa Neto <dimiro1@gmail.com>")
+	fmt.Println("Waiting for requests...")
+
 	log.Fatal(http.ListenAndServe(addr,
 		handlers.LoggingHandler(os.Stdout, m)))
 }

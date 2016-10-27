@@ -1,0 +1,4 @@
+package: github.com/dimiro1/bogus
+import:
+- package: github.com/gorilla/handlers
+- package: github.com/gorilla/mux
